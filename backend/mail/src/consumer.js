@@ -37,7 +37,7 @@ export const startSendOtpConsumer = async () => {
           });
 
           await transporter.sendMail({
-            from: "Chat app",
+            from: "MeChat",
             to,
             subject,
             text: body,
@@ -47,6 +47,8 @@ export const startSendOtpConsumer = async () => {
           channel.ack(msg);
         } catch (error) {
           console.log("Failed to send otp", error);
+          // Negative acknowledge to requeue the message for retry
+          channel.nack(msg, false, true);
         }
       }
     });
